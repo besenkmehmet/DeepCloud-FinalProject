@@ -102,9 +102,6 @@ def index():
             upload_url = upload_blob(f)
             
             image_url,face_count, maskCount,faces = detect_faces(upload_url)
-            #TODO: Add database
-
-            #create a model of the row
             image_id = image_url.split('/')[-1].rstrip(".png")
 
             addImageToDB(image_id,len(faces)) 
@@ -116,15 +113,20 @@ def index():
             return render_template('index.html')
             
     else:
-        return render_template('index.html')
+        return render_template('index.html') 
 
 
 @app.route("/logs")
 def logs():
-    return render_template('logs.html')
+
+    #TODO: Get all the images and log them in a table
+
+    images = Image.query.all()
+    print(images)
+    return render_template('logs.html', images=images)
 
 
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

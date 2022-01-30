@@ -2,9 +2,49 @@
 
 {%block content%}
 
-<div class="d-flex justify-content-center mt-5">
 
-    <p class="h3">Logs</p>
+<div class="d-flex flex-column">
+    <div class="d-flex justify-content-center mt-5">
+        <p class="h3">Logs</p>
+    </div>    
+
+    {% if images is defined and images|length > 0%}
+        <div class="container-sm mt-5" style="width: 50%;">
+            <table class="table table-striped table-bordered table-hover">
+                
+                <tr>
+                    <th>Image ID</th>
+                    <th>Upload Date</th>
+                    <th>Number of Faces</th>
+                </tr>
+
+                {% for image in images%}
+
+                <tr>
+                    <td>{{image.id}}</td>
+                    <td>{{image.date_uploaded}}</td>
+                    <td>{{image.number_of_people}}</td>
+                </tr>
+
+                {% endfor %}
+
+            </table>
+
+        </div>
+
+    {%else%}
+        <div class="container-sm mt-5 text-center" style="width: 50%; margin-bottom: 19%;">
+            <p class="h4">No record to show here. Please upload a picture first.</p>
+        </div>
+
+
+    {% endif %}
+  
+    <div class="d-flex justify-content-center mt-5">
+       
+    </div>
+
+
 </div>
 
 

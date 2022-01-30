@@ -4,7 +4,14 @@ from flask_sqlalchemy import SQLAlchemy
 from upload_image import upload_blob
 from face import detect_faces
 import datetime
-from config import SERVER_NAME, DATABASE_USERNAME, DATABASE_NAME, DATABASE_PASSWORD
+from config import (
+    SERVER_NAME,
+    DATABASE_USERNAME,
+    DATABASE_NAME,
+    DATABASE_PASSWORD,
+    STORAGE_NAME,
+    CONTAINER_NAME,
+)
 
 
 driver = "{ODBC Driver 17 for SQL Server}"
@@ -91,8 +98,10 @@ db.create_all()
 def index(id = ""):
 
     if id:
-        #create the url by using the given id
-        image_url = f"https://{os.environ.get('STORAGE_NAME')}.blob.core.windows.net/{os.environ.get('CONTAINER_NAME')}/{id}.png" 
+        # create the url by using the given id
+        image_url = (
+            f"https://{STORAGE_NAME}.blob.core.windows.net/{CONTAINER_NAME}/{id}.png"
+        )
 
         #get the image from the DB
         img = Image.query.get(id)

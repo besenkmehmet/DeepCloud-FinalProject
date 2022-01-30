@@ -1,29 +1,14 @@
-import asyncio
-import io
-import glob
-import os
-import sys
-import time
-import uuid
 import requests
-from urllib.parse import urlparse
 from io import BytesIO
-# To install this module, run:
-# python -m pip install Pillow
 from PIL import Image, ImageDraw
 from azure.cognitiveservices.vision.face import FaceClient
 from msrest.authentication import CognitiveServicesCredentials
-from azure.cognitiveservices.vision.face.models import TrainingStatusType, Person, QualityForRecognition, FaceAttributes
 from upload_image import upload_blob
-from dotenv import load_dotenv
+from config import FACE_ENDPOINT, FACE_KEY
 
 
-load_dotenv()
-
-
-
-KEY = os.environ.get("FACE_KEY")
-ENDPOINT = os.environ.get("FACE_ENDPOINT")
+KEY = FACE_KEY
+ENDPOINT = FACE_ENDPOINT
 face_client = FaceClient(ENDPOINT, CognitiveServicesCredentials(KEY))
 
 

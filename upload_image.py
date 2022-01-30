@@ -1,14 +1,14 @@
-import os, uuid
-from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient, __version__
 import uuid
-from dotenv import load_dotenv
+from azure.storage.blob import (
+    BlobServiceClient,
+    __version__,
+)
+import uuid
+from config import CONTAINER_CONN_STRING, CONTAINER_NAME
 
 
-load_dotenv()
-
-
-container_name = os.environ.get("CONTAINER_NAME")
-connect_str = os.environ.get("CONTAINER_CONN_STRING")
+container_name = CONTAINER_NAME
+connect_str = CONTAINER_CONN_STRING
 # Create a blob client using the local file name as the name for the blob
 blob_service_client  = BlobServiceClient.from_connection_string(connect_str)
 

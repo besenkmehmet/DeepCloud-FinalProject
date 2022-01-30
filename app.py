@@ -1,24 +1,17 @@
-import os
-from urllib import response
 import urllib.parse
-from flask import Flask, render_template,request, redirect
+from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine
 from upload_image import upload_blob
 from face import detect_faces
 import datetime
-from dotenv import load_dotenv
+from config import SERVER_NAME, DATABASE_USERNAME, DATABASE_NAME, DATABASE_PASSWORD
 
 
-
-
-load_dotenv()
-
-driver = "{SQL Server}"
-server = os.environ.get("SERVER_NAME")
-database = os.environ.get("DATABASE_NAME")
-user = os.environ.get("DATABASE_USERNAME")
-password = os.environ.get("DATABASE_PASSWORD")
+driver = "{ODBC Driver 17 for SQL Server}"
+server = SERVER_NAME
+database = DATABASE_NAME
+user = DATABASE_USERNAME
+password = DATABASE_PASSWORD
 
 
 # Configure Database URI: 

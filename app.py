@@ -1,7 +1,6 @@
 import os
 from urllib import response
 import urllib.parse
-from django.shortcuts import render
 from flask import Flask, render_template,request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
@@ -128,4 +127,4 @@ def logs():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()

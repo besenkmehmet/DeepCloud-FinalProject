@@ -21,8 +21,8 @@
                 {% for image in images%}
 
                 <tr>
-                    <td>{{image.id}}</td>
-                    <td>{{image.date_uploaded}}</td>
+                    <td><a href="/{{image.id}}">{{image.id}}</a></td>
+                    <td>{{image.date_uploaded.strftime("%d %b %Y %H:%M:%S")}}</td>
                     <td>{{image.number_of_people}}</td>
                 </tr>
 

@@ -82,7 +82,7 @@ def detect_faces(face_image_url):
         bounding_boxed_img.rectangle([x0,y0,x1,y1], fill =None , outline =outline_color ,width=4)
 
 
-        faces.append([face.face_id,hasMask,nose_and_mouth_covered])
+        faces.append([face.face_id,str(hasMask),str(nose_and_mouth_covered)])
 
     url = upload_blob(convertToPNG(img))
 

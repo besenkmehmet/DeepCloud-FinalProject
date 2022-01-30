@@ -2,3 +2,5 @@
 DeepCloud
 config.py
 venv
+__pycache__
+.azure

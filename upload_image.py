@@ -1,9 +1,14 @@
 import os, uuid
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient, __version__
 import uuid
+from dotenv import load_dotenv
 
-container_name = "cmpe363-blob"
-connect_str = """DefaultEndpointsProtocol=https;AccountName=cmpe361store;AccountKey=xJ5lwwBRe7nEClJ7loQdsoyR2T8RW/1QcOe+T73ngTzq7MHZPHzYDpbz5H3llbNeIupIvU6/rpm35+uLAoMMKg==;EndpointSuffix=core.windows.net"""
+
+load_dotenv()
+
+
+container_name = os.environ.get("CONTAINER_NAME")
+connect_str = os.environ.get("CONTAINER_CONN_STRING")
 # Create a blob client using the local file name as the name for the blob
 blob_service_client  = BlobServiceClient.from_connection_string(connect_str)
 

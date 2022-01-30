@@ -15,9 +15,15 @@ from azure.cognitiveservices.vision.face import FaceClient
 from msrest.authentication import CognitiveServicesCredentials
 from azure.cognitiveservices.vision.face.models import TrainingStatusType, Person, QualityForRecognition, FaceAttributes
 from upload_image import upload_blob
+from dotenv import load_dotenv
 
-KEY = "59b178b172ae40938f6ce607f539b8ff"
-ENDPOINT = "https://31313131.cognitiveservices.azure.com/"
+
+load_dotenv()
+
+
+
+KEY = os.environ.get("FACE_KEY")
+ENDPOINT = os.environ.get("FACE_ENDPOINT")
 face_client = FaceClient(ENDPOINT, CognitiveServicesCredentials(KEY))
 
 

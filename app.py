@@ -8,19 +8,22 @@ from sqlalchemy import create_engine
 from upload_image import upload_blob
 from face import detect_faces
 import datetime
+from dotenv import load_dotenv
+
+
+
+
+load_dotenv()
 
 driver = "{SQL Server}"
-server = "cloud-server31.database.windows.net"
-database = "Cmpe363Final"
-user = "admin123"
-password = "Bilgi123123"
-
-
+server = os.environ.get("SERVER_NAME")
+database = os.environ.get("DATABASE_NAME")
+user = os.environ.get("DATABASE_USERNAME")
+password = os.environ.get("DATABASE_PASSWORD")
 
 
 # Configure Database URI: 
 params = urllib.parse.quote_plus(f"DRIVER={driver};SERVER={server};DATABASE={database};UID={user};PWD={password}")
-
 
 # initialization
 app = Flask(__name__)
@@ -29,29 +32,53 @@ app.config['SECRET_KEY'] = 'supersecret'
 app.config['SQLALCHEMY_DATABASE_URI'] = "mssql+pyodbc:///?odbc_connect=%s" % params
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 
+
 db = SQLAlchemy(app)
 
 
-db.engine.execute("DROP TABLE Faces ")
-db.engine.execute("DROP TABLE Images ")
+# db.engine.execute("DROP TABLE Face")
+# db.engine.execute("DROP TABLE Image")
 
-class Faces(db.Model):
+
+class Face(db.Model):
     id = db.Column(db.String(255),primary_key=True)
     wearing_mask = db.Column(db.String(255))
     nose_mouth = db.Column(db.String(255))
-    image_id = db.Column(db.String(255))
+    image_id = db.Column(db.String(255), db.ForeignKey('image.id'), nullable = False)
+    
     
     def __repr__(self):
         return f"<Task {self.id}>"
 
-class Images(db.Model):
+class Image(db.Model):
     id = db.Column(db.String(255),primary_key = True)
     date_uploaded = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     number_of_people = db.Column(db.Integer)
-
+    faces = db.relationship('Face', backref='image', lazy=True)
    
     def __repr__(self):
         return f"<Task {self.id}>"
+
+
+
+def addFacesToDB(faces, image_id):
+
+    for face in faces:
+        try:
+            face_model = Face(id=face[0], wearing_mask = face[1], nose_mouth = face[2], image_id=image_id)
+            db.session.add(face_model)
+            db.session.commit()
+        except:
+            return "Could not add the entry to the database"
+
+def addImageToDB(img_id, number_of_people):
+
+    image_model = Image(id=img_id,number_of_people=number_of_people)
+    db.session.add(image_model)
+    db.session.commit()
+    
+
+
 
 
 #db.engine.execute("INSERT INTO Deneme2 VALUES ('mehmet3')")
@@ -79,23 +106,12 @@ def index():
             #TODO: Add database
 
             #create a model of the row
-            image_id = image_url.split('/')[-1]
+            image_id = image_url.split('/')[-1].rstrip(".png")
 
-            for face in faces:
-                try:
-                    face_model = Faces(id=face[0], wearing_mask = face[1], nose_mouth = face[2], image_id=image_id)
-                    db.session.add(face_model)
-                    db.session.commit()
-                except:
-                    return "Could not add the entry to the database"
+            addImageToDB(image_id,len(faces)) 
+            addFacesToDB(faces, image_id)
 
-            image_model = Images(id=image_id,number_of_people=len(faces))
-            db.session.add(image_model)
-            db.session.commit()
-                        
             return render_template('index.html',image_url = image_url, face_count = face_count, mask_count = maskCount, faces=faces)
-
-
 
         else:
             return render_template('index.html')
@@ -107,6 +123,9 @@ def index():
 @app.route("/logs")
 def logs():
     return render_template('logs.html')
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

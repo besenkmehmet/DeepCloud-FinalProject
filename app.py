@@ -57,7 +57,7 @@ def addFacesToDB(faces, image_id):
 
     for face in faces:
         try:
-            face_model = Face(id=face[0], wearing_mask = face[1], nose_mouth = face[2], image_id=image_id)
+            face_model = Face(id=face[0], wearing_mask = str(face[1]), nose_mouth = str(face[2]), image_id=image_id)
             db.session.add(face_model)
             db.session.commit()
         except:
@@ -87,7 +87,27 @@ db.create_all()
 # print(db.engine.table_names())
 
 @app.route("/",methods=['POST','GET'])
-def index():
+@app.route("/<string:id>",methods=['POST','GET'])
+def index(id = ""):
+
+    if id:
+        #create the url by using the given id
+        image_url = f"https://{os.environ.get('STORAGE_NAME')}.blob.core.windows.net/{os.environ.get('CONTAINER_NAME')}/{id}.png" 
+
+        #get the image from the DB
+        img = Image.query.get(id)
+        
+        #loop through the faces in img
+        maskCount = 0
+        faces = []
+
+        for face in img.faces:
+            if face.wearing_mask == "True":
+                maskCount += 1
+            faces.append([face.id,face.wearing_mask, face.nose_mouth])
+        print(faces)
+
+        return render_template('index.html',image_url = image_url, face_count = len(img.faces), mask_count = maskCount, faces=faces)
 
     if request.method  == "POST":
         f = request.files['uploaded_image']
@@ -109,12 +129,15 @@ def index():
         return render_template('index.html') 
 
 
+
+
+
 @app.route("/logs")
 def logs():
 
     #TODO: Get all the images and log them in a table
 
-    images = Image.query.all()
+    images = Image.query.order_by(Image.date_uploaded.desc()).limit(20).all()
     print(images)
     return render_template('logs.html', images=images)
 

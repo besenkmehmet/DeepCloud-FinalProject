@@ -17,7 +17,7 @@
             <img src="{% if image_url is defined %}
             {{ image_url }}
         {% else %}
-        http://qnimate.com/wp-content/uploads/2014/03/images2.jpg
+        {{url_for('static',filename='images.jpg')}}
         {% endif %}" height="400" id="main_image" class="align-self-center bg-white">
 
 
@@ -60,7 +60,7 @@
 
                     {% for face_id, hasMask, isCovered in faces%}
                     <tbody>
-                        {% if hasMask and isCovered %}
+                        {% if (hasMask == "True") and (isCovered == "True" or isCovered)%}
                             <tr class="table-success">
                         {%else%}
                             <tr class="table-danger">
